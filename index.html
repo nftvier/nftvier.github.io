@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NFT Viewer Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Card */
+.card {
+  width: 320px;
+  background: #111827;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Image */
+img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-blue { background: #3b82f6; }
+.btn-green { background: #10b981; }
+.btn-back { background: #6b7280; }
+
+/* Pages */
+.page {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- PAGE 1 -->
+  <div id="home" class="page active">
+    <img id="nftImage" />
+
+    <h3>Demo NFT</h3>
+
+    <button class="btn btn-blue" onclick="goPage('idPage')">
+      View ID
+    </button>
+
+    <button class="btn btn-green" onclick="goPage('revealPage')">
+      Reveal
+    </button>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div id="idPage" class="page">
+    <h2>NFT Details</h2>
+    <p>ID: #001</p>
+    <p>Collection: Demo</p>
+
+    <button class="btn btn-back" onclick="goPage('home')">
+      Back
+    </button>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div id="revealPage" class="page">
+    <h2>Reveal Status</h2>
+    <p>🔥 Coming Soon...</p>
+
+    <button class="btn btn-back" onclick="goPage('home')">
+      Back
+    </button>
+  </div>
+
+</div>
+
+<script>
+/* IMAGE LOAD WITH FALLBACK */
+const cid = "bafybeibcktxonnx2exzcrntpxibomnvvuqwzahergjgsxgcwyzrzquzrfa";
+
+const gateways = [
+  "https://cloudflare-ipfs.com/ipfs/",
+  "https://gateway.pinata.cloud/ipfs/",
+  "https://ipfs.io/ipfs/"
+];
+
+let index = 0;
+const img = document.getElementById("nftImage");
+
+function loadImage() {
+  if(index >= gateways.length) {
+    img.alt = "Image failed to load";
+    return;
+  }
+
+  img.src = gateways[index] + cid;
+
+  img.onerror = () => {
+    index++;
+    loadImage();
+  };
+}
+
+loadImage();
+
+/* PAGE SWITCH */
+function goPage(pageId) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(pageId).classList.add("active");
+}
+</script>
+
+</body>
+</html>
