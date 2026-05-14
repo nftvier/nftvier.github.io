@@ -2,138 +2,139 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NFT Viewer Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFT Viewer Pro</title>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial;
   background: #0f172a;
-  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  font-family: Arial;
 }
 
 /* Card */
 .card {
   width: 320px;
-  background: #111827;
+  background: #6ee7b7;
   border-radius: 20px;
-  padding: 20px;
-  text-align: center;
+  padding: 15px;
+  position: relative;
 }
 
-/* Image */
-img {
+/* NFT container */
+.nft-box {
+  position: relative;
+}
+
+/* NFT Image */
+.nft-img {
   width: 100%;
   border-radius: 15px;
 }
 
-/* Buttons */
+/* Overlay Buttons */
+.overlay-buttons {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 10px;
+}
+
 .btn {
-  padding: 8px 12px;
-  margin: 5px;
-  border: none;
+  padding: 6px 12px;
   border-radius: 8px;
+  border: none;
+  background: rgba(0,0,0,0.4);
+  color: white;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
+  backdrop-filter: blur(5px);
+  transition: 0.3s;
 }
 
-.btn-blue { background: #3b82f6; }
-.btn-green { background: #10b981; }
-.btn-back { background: #6b7280; }
+/* Glow animation */
+.btn.active {
+  background: rgba(0,0,0,0.7);
+  box-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
+  animation: pulse 1s infinite;
+}
 
-/* Pages */
-.page {
+@keyframes pulse {
+  0% { box-shadow: 0 0 5px #00f7ff; }
+  50% { box-shadow: 0 0 20px #00f7ff; }
+  100% { box-shadow: 0 0 5px #00f7ff; }
+}
+
+/* Coming Soon */
+.coming {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: #0f172a;
   display: none;
+  animation: blink 1s infinite;
 }
 
-.active {
-  display: block;
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
 }
 </style>
-
 </head>
 
 <body>
 
 <div class="card">
 
-  <!-- PAGE 1 -->
-  <div id="home" class="page active">
-    <img id="nftImage" />
+  <div class="nft-box">
 
-    <h3>Demo NFT</h3>
+    <!-- Buttons on top -->
+    <div class="overlay-buttons">
+      <button id="orgBtn" class="btn active">ORG</button>
+      <button id="idBtn" class="btn">ID</button>
+    </div>
 
-    <button class="btn btn-blue" onclick="goPage('idPage')">
-      View ID
-    </button>
+    <!-- NFT -->
+    <img id="nftImage" class="nft-img"
+    src="https://raw.githubusercontent.com/nftvier/nftvier.github.io/main/1.gif">
 
-    <button class="btn btn-green" onclick="goPage('revealPage')">
-      Reveal
-    </button>
-  </div>
+    <!-- Coming Soon -->
+    <div id="comingText" class="coming">Coming Soon...</div>
 
-  <!-- PAGE 2 -->
-  <div id="idPage" class="page">
-    <h2>NFT Details</h2>
-    <p>ID: #001</p>
-    <p>Collection: Demo</p>
-
-    <button class="btn btn-back" onclick="goPage('home')">
-      Back
-    </button>
-  </div>
-
-  <!-- PAGE 3 -->
-  <div id="revealPage" class="page">
-    <h2>Reveal Status</h2>
-    <p>🔥 Coming Soon...</p>
-
-    <button class="btn btn-back" onclick="goPage('home')">
-      Back
-    </button>
   </div>
 
 </div>
 
 <script>
-/* IMAGE LOAD WITH FALLBACK */
-const cid = "bafybeidt3tkw2ybrjnmjmui2ogqvidozq36mo765cb3dcv3f4q5bjhug7a";
+const orgBtn = document.getElementById("orgBtn");
+const idBtn = document.getElementById("idBtn");
+const nftImage = document.getElementById("nftImage");
+const comingText = document.getElementById("comingText");
 
-const gateways = [
-  "https://cloudflare-ipfs.com/ipfs/",
-  "https://gateway.pinata.cloud/ipfs/",
-  "https://ipfs.io/ipfs/"
-];
+orgBtn.onclick = () => {
+  orgBtn.classList.add("active");
+  idBtn.classList.remove("active");
 
-let index = 0;
-const img = document.getElementById("nftImage");
+  nftImage.style.opacity = "1";
+  comingText.style.display = "none";
+};
 
-function loadImage() {
-  if(index >= gateways.length) {
-    img.alt = "Image failed to load";
-    return;
-  }
+idBtn.onclick = () => {
+  idBtn.classList.add("active");
+  orgBtn.classList.remove("active");
 
-  img.src = gateways[index] + cid;
-
-  img.onerror = () => {
-    index++;
-    loadImage();
-  };
-}
-
-loadImage();
-
-/* PAGE SWITCH */
-function goPage(pageId) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById(pageId).classList.add("active");
-}
+  nftImage.style.opacity = "0.3";
+  comingText.style.display = "block";
+};
 </script>
 
 </body>
